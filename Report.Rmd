@@ -1,0 +1,117 @@
+---
+title: "Basket Analysis for Rob's Market"
+output: pdf_document
+date: "`r Sys.Date()`"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, nobreak=TRUE)
+library(lemon)
+library(plyr)
+library(cleaner)
+data <- read.csv('MarketBasket.csv')
+knit_print.data.frame <- lemon_print
+```
+
+This report contains data collected on 1000 customer purchase items on: Bread, Jelly, Peanut Butter. It will examine some probability results and frequency breakdowns of items.
+
+
+
+```{r caption='Brief preview of Data',render=lemon_print}
+head(data)
+```
+
+## Frequency breakdown by items and their type
+```{r Freq, caption='Frequency of Bread', render=lemon_print}
+freq(x=clean_factor(data$Bread), 
+     markdown=TRUE,
+     title='Frequencies of Bread Type Sold',
+     header=FALSE,
+     quote=FALSE)
+```
+
+```{r, caption='Frequency of Jelly Type', render=lemon_print}
+freq(x=clean_factor(data$Jelly), 
+     markdown=TRUE,
+     title='Frequencies of Jelly Type Sold',
+     header=FALSE,
+     quote=FALSE)
+```
+
+```{r, caption='Frequency of Peanut Butter Type', render=lemon_print}
+freq(x=clean_factor(data$Peanut.Butter), 
+     markdown=TRUE,
+     title='Frequencies of Peanut Butter Type Sold',
+     header=FALSE,
+     quote=FALSE)
+```
+
+## Probability Analysis
+
+1. The probability that a random customer does not purchase any of the three
+products (bread, jelly, or peanut butter).
+```{r 1}
+none <- nrow(data[data$Bread == 'none' & data$Jelly == 'none' & data$Peanut.Butter == 'none',])
+noneProb <- none/nrow(data)
+noneProb
+```
+
+2. The probability that a random customer purchases white bread.
+```{r 2, echo=FALSE}
+white_bread_probability <- sum(data$Bread == 'white')/nrow(data)
+white_bread_probability
+```
+
+3. The probability that a random customer purchases wheat bread.
+```{r 3}
+wheat_prob <- sum(data$Bread == 'wheat')/nrow(data)
+wheat_prob
+```
+
+4. The probability that a random customer purchases grape jelly given that he or she purchases white bread.
+
+```{r 4}
+jelly_given_white <- sum(data$Jelly == 'grape' & data$Bread == 'white')/sum(data$Bread == 'white')
+jelly_given_white
+```
+5. The probability that a random customer purchases strawberry jelly given that he or she purchases white bread.
+
+```{r 5}
+straw_given_white <- sum(data$Jelly == 'strawberry' & data$Bread == 'white')/sum(data$Bread == 'white')
+straw_given_white
+```
+6. The probability that a random customer purchases creamy peanut butter given that he or she purchases white bread.
+```{r 6}
+cream_given_white <- sum(data$Peanut.Butter == 'creamy' & data$Bread == 'white')/sum(data$Bread == 'white')
+cream_given_white
+```
+
+7. The probability that a random customer purchases natural peanut butter given that he or she purchases white bread.
+```{r 7}
+nat_given_white <- sum(data$Peanut.Butter == 'natural' & data$Bread == 'white')/sum(data$Bread == 'white')
+nat_given_white
+```
+
+8. The probability that a random customer purchases creamy peanut butter given that
+he or she purchases wheat bread.
+```{r 8}
+cream_given_wheat <- sum(data$Peanut.Butter == 'creamy' & data$Bread == 'wheat')/sum(data$Bread == 'wheat')
+cream_given_wheat
+```
+9. The probability that a random customer purchases natural peanut butter given that he or she purchases wheat bread.
+```{r 9}
+nat_given_wheat <- sum(data$Peanut.Butter == 'natural' & data$Bread == 'wheat')/sum(data$Bread == 'wheat')
+```
+
+10. The probability that a random customer purchases white bread, grape jelly, and
+creamy peanut butter.
+```{r 10}
+all <- nrow(data[data$Bread == 'white' & data$Jelly == 'grape' & data$Peanut.Butter == 'creamy',])
+allprob <- all/nrow(data)
+allprob
+```
+
+## Analysis
+
+Looking through the probability analysis we see grape jelly has a high probability of being sold when white bread is purchased. It would be a good idea to display these two products to help drive sales. 
+
